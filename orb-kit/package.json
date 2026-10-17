@@ -1,0 +1,22 @@
+{
+  "name": "@orbworld/kit",
+  "version": "0.1.0",
+  "description": "Run Orb worlds on your own machine, exactly as Orb runs them: Orb's world runtime, multiplayer between browser tabs, shared state, saves and shops.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://orbworlds.com",
+  "repository": "github:orbworlds/kit",
+  "bin": {
+    "orb": "bin/orb.mjs"
+  },
+  "types": "orb.d.ts",
+  "files": [
+    "bin",
+    "lib",
+    "orb.d.ts",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  }
+}

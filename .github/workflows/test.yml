@@ -1,0 +1,23 @@
+# The world's tests (npm test) on every pull request and push. Made by Orb.
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  play:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm ls playwright >/dev/null 2>&1 || npm install --no-save --no-audit --no-fund playwright@^1.63.0
+      - run: npm test
