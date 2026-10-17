@@ -1,6 +1,6 @@
-node_modules
 dist
 out
 .orb/
-.orb-test/
-test/smoke.png
+node_modules/
+package-lock.json
+.DS_Store
