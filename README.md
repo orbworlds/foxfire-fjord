@@ -29,10 +29,10 @@ npm start       # play it the way Orb serves it, through the Orb kit
 ```
 
 `npm start` packages the world into `.orb/` and opens it at http://127.0.0.1:4242 with the
-Orb kit (`npm install` brings it), which gives it what it gets on Orb: other
+[Orb kit](https://www.npmjs.com/package/@orbworlds/kit) (`npm install` brings it), which gives it what it gets on Orb: other
 players (open a second tab), saves and shared state. You need Node 20 or newer.
 
-What it uses from Orb's world SDK (`window.orb`, typed in [`orb.d.ts`](https://orbworlds.com/kit/orb.d.ts)):
+What it uses from Orb's world SDK (`window.orb`, typed in `@orbworlds/kit/orb.d.ts`):
 
 - `orb.visitors` to show everyone who is here as a character
 - plain `localStorage` for progress, which Orb saves per player and brings along to their other devices
