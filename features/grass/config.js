@@ -1,0 +1,38 @@
+/** Near blades live in small chunks (fine LOD granularity), far tufts in big ones. */
+export const NEAR_CHUNK = 16;
+export const FAR_CHUNK = 32;
+/** Floats per grass instance: root.xyz rank | height width facing kind*2+lean | hue dry nx nz */
+export const STRIDE = 12;
+/** Instance kinds (encoded as floor(iShape.w / 2) in the shader). */
+/** bleached winter straw (green grass in the melt ring, where `dry` is low) */
+export const KIND_STRAW = 0;
+/** lyme grass on the beach dunes: stiff, arching, blue-grey to straw */
+export const KIND_LYME = 1;
+/** a dried seed stalk */
+export const KIND_SEED = 2;
+/** low green moss cushions in the hot spring's melt ring */
+export const KIND_MOSS = 3;
+export function grassSettings(q) {
+    const dist = q.grassDistance;
+    const dens = Math.max(0.05, q.grassDensity);
+    const nearEnd = Math.max(16, Math.min(46, dist * 0.42));
+    return {
+        // dense close in, where the view looks down into the sward; beyond lodR0 the
+        // (lodR0 / d)^lodPow falloff matches the cost of a sparser, wider disc
+        bladeDensity: 38 * dens,
+        tuftDensity: 7 * Math.sqrt(dens),
+        lodR0: 3.85 + 3.85 * dens,
+        lodPow: 1.55,
+        nearFadeStart: nearEnd - 8,
+        nearFadeEnd: nearEnd,
+        farFadeStart: dist * 0.68,
+        farFadeEnd: dist,
+        tuftR0: nearEnd,
+        widthScale: Math.pow(0.85 / dens, 0.32),
+        budgetMs: 2.6,
+        // the terrain draws exact heights on a 64 m / gridN lattice near the camera;
+        // sampling the same lattice keeps roots on the rendered surface
+        heightStep: 64 / (q.terrainDetail >= 1 ? 64 : q.terrainDetail >= 0.75 ? 48 : 32),
+        terrainShadow: q.terrainDetail >= 0.75,
+    };
+}

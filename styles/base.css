@@ -1,0 +1,405 @@
+/* ------------------------------------------------------------------ */
+/* Foxfire Fjord — tokens: night glass, aurora green, warm amber       */
+/* ------------------------------------------------------------------ */
+:root {
+  --navy: #0b1324;
+  --glass-rgb: 12, 21, 40;
+  --glass: rgba(var(--glass-rgb), 0.64);
+  --glass-strong: rgba(13, 23, 43, 0.92);
+  --glass-solid: #0f1a31;
+  --line: rgba(196, 220, 255, 0.12);
+  --line-2: rgba(196, 220, 255, 0.22);
+  --hi: rgba(255, 255, 255, 0.075);
+  --hover: rgba(196, 220, 255, 0.085);
+  --press: rgba(196, 220, 255, 0.14);
+  --text: #eef3fa;
+  --text-2: #b6c2d4;
+  --text-3: #7f8ca2;
+  --aurora: #6ef2b0;
+  --aurora-2: #4fd6c8;
+  --violet: #a98bff;
+  --aurora-soft: rgba(110, 242, 176, 0.14);
+  --aurora-ring: rgba(110, 242, 176, 0.45);
+  --amber: #ffb866;
+  --amber-2: #ff9a4d;
+  --amber-soft: rgba(255, 184, 102, 0.16);
+  --snow: #f4f7fb;
+  --aurora-line: linear-gradient(90deg, #6ef2b0 0%, #4fd6c8 45%, #a98bff 100%);
+  --scene-text: #f4f7fb;
+  --scene-shadow: 0 1px 2px rgba(2, 6, 16, 0.55), 0 0 22px rgba(2, 6, 16, 0.45);
+  --serif: 'Fraunces Variable', 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  --sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --r: 0.75rem;
+  --r-s: 0.5rem;
+  --r-l: 1.05rem;
+  --edge: clamp(12px, 1.45vw, 30px);
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --btn: 2.55rem;
+  --blur: 18px;
+  --shadow: 0 14px 40px -12px rgba(2, 6, 16, 0.62), 0 2px 6px -2px rgba(2, 6, 16, 0.35);
+  --shadow-s: 0 6px 18px -8px rgba(2, 6, 16, 0.6);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t: 0.32s;
+  /* aurora strength right now (0..1), written by the HUD */
+  --aur: 0;
+}
+
+/* the short polar day: the glass gets a touch denser so text holds over bright snow */
+.ui--day {
+  --glass: rgba(var(--glass-rgb), 0.7);
+  --line: rgba(220, 234, 255, 0.16);
+  --shadow: 0 14px 40px -12px rgba(8, 18, 40, 0.45), 0 2px 6px -2px rgba(8, 18, 40, 0.25);
+  --scene-shadow: 0 1px 2px rgba(6, 14, 34, 0.6), 0 0 18px rgba(6, 14, 34, 0.42);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+html {
+  font-size: clamp(13px, 11.2px + 0.17vw, 18px);
+}
+
+/* 1440p and 4K monitors at 100 % scaling: keep growing (continuous at 2400 px) */
+@media (min-width: 2400px) {
+  html {
+    font-size: clamp(15px, 5.75px + 0.397vw, 24px);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--navy);
+  font-family: var(--sans);
+  font-feature-settings: 'cv11', 'ss01';
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+#app,
+#scene {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#scene {
+  display: block;
+  outline: none;
+  touch-action: none;
+}
+
+#ui {
+  color: var(--text);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--aurora);
+  outline-offset: 2px;
+}
+
+svg {
+  flex: none;
+}
+
+kbd {
+  font-family: var(--sans);
+  font-size: 0.7em;
+  font-weight: 560;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  min-width: 1.65em;
+  padding: 0.14em 0.42em;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  border-radius: 0.34rem;
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------------ */
+/* Night glass: one translucent navy surface for every panel           */
+/* ------------------------------------------------------------------ */
+.places,
+.timebar,
+.tool-btn,
+.mode-switch,
+.chip,
+.card,
+.tour__card,
+.settings,
+.minimap,
+.toast,
+.tooltip,
+.tb-sky,
+.walk-hint,
+.walk-prompt,
+.hud-restore {
+  background-color: var(--glass);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 46%);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(1.45);
+  backdrop-filter: blur(var(--blur)) saturate(1.45);
+  border: 1px solid var(--line);
+  box-shadow:
+    inset 0 1px 0 var(--hi),
+    var(--shadow);
+  transition:
+    background-color 0.8s var(--ease),
+    border-color 0.8s var(--ease),
+    color 0.3s var(--ease),
+    opacity var(--t) var(--ease),
+    transform var(--t) var(--ease),
+    visibility var(--t);
+}
+
+/* low quality (phones): no live blur behind panels, a denser glass instead */
+.hud--lite {
+  --glass: rgba(var(--glass-rgb), 0.86);
+}
+
+.hud--lite .places,
+.hud--lite .timebar,
+.hud--lite .tool-btn,
+.hud--lite .mode-switch,
+.hud--lite .chip,
+.hud--lite .card,
+.hud--lite .tour__card,
+.hud--lite .settings,
+.hud--lite .minimap,
+.hud--lite .tb-sky,
+.hud--lite .walk-hint,
+.hud--lite .walk-prompt {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-2);
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.icon-btn svg {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.icon-btn:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.icon-btn:active {
+  background: var(--press);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid var(--line-2);
+  background: transparent;
+  border-radius: 999px;
+  padding: 0.52rem 1.05rem;
+  font-size: 0.84rem;
+  font-weight: 540;
+  letter-spacing: 0.005em;
+  color: var(--text);
+  transition:
+    background-color 0.2s var(--ease),
+    border-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.btn svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.btn:hover {
+  background: var(--hover);
+  border-color: var(--text-3);
+}
+
+.btn--primary {
+  background: var(--aurora);
+  border-color: var(--aurora);
+  color: #062218;
+}
+
+.btn--primary:hover {
+  background: #8af7c3;
+  border-color: #8af7c3;
+  box-shadow: 0 0 18px rgba(110, 242, 176, 0.35);
+}
+
+.btn--aurora {
+  border-color: var(--aurora-ring);
+  color: var(--aurora);
+  background: var(--aurora-soft);
+}
+
+.btn--aurora:hover {
+  background: rgba(110, 242, 176, 0.22);
+  border-color: var(--aurora);
+  box-shadow: 0 0 20px rgba(110, 242, 176, 0.25);
+}
+
+/* toggle switch */
+.switch {
+  position: relative;
+  flex: none;
+  width: 2.15rem;
+  height: 1.22rem;
+  border-radius: 999px;
+  background: rgba(196, 220, 255, 0.18);
+  transition:
+    background-color 0.25s var(--ease),
+    box-shadow 0.25s var(--ease);
+}
+
+.switch i {
+  position: absolute;
+  top: 0.16rem;
+  left: 0.16rem;
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+  background: var(--snow);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.switch.is-on {
+  background: var(--aurora);
+  box-shadow: 0 0 12px rgba(110, 242, 176, 0.35);
+}
+
+.switch.is-on i {
+  transform: translateX(0.93rem);
+  background: #06281c;
+}
+
+/* segmented control */
+.segmented {
+  display: flex;
+  gap: 0.2rem;
+  padding: 0.2rem;
+  border-radius: 0.6rem;
+  background: rgba(2, 8, 20, 0.35);
+  border: 1px solid var(--line);
+}
+
+.segmented__item {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.12rem;
+  min-height: 2.1rem;
+  border: 0;
+  border-radius: 0.45rem;
+  background: transparent;
+  padding: 0.38rem 0.45rem;
+  font-size: 0.78rem;
+  font-weight: 540;
+  color: var(--text-2);
+  white-space: nowrap;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    box-shadow 0.2s var(--ease);
+}
+
+.segmented__item b {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.segmented__item small {
+  font-size: 0.64rem;
+  font-weight: 500;
+  color: var(--text-3);
+}
+
+.segmented__item svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.segmented--icons .segmented__item {
+  flex-direction: row;
+  gap: 0.35rem;
+}
+
+.segmented__item:hover {
+  color: var(--text);
+  background: var(--hover);
+}
+
+.segmented__item.is-active {
+  background: rgba(110, 242, 176, 0.16);
+  color: var(--aurora);
+  box-shadow: inset 0 0 0 1px rgba(110, 242, 176, 0.38);
+}
+
+.segmented__item.is-active small {
+  color: rgba(110, 242, 176, 0.75);
+}
+
+/* the brand mark's rays brighten with the aurora */
+.brand-mark,
+.brand__logo,
+.loading__mark,
+.intro__mark {
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
